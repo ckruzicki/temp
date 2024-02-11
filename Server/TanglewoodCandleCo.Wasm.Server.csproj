@@ -4,10 +4,15 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>2eb55bfe-3784-48a4-aa3c-621b4f02a41c</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Duende.BFF" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.1" />
+	<PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
+	<PackageReference Include="Serilog.Sinks.Seq" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
