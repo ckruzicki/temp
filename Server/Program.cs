@@ -26,7 +26,6 @@ try
         .WriteTo.Seq("http://localhost:5341")
         .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}",theme: AnsiConsoleTheme.Literate));
 
-    //builder.Services.AddControllers();
     builder.Services.AddControllersWithViews();
     builder.Services.AddRazorPages();
     builder.Services.AddBff();
@@ -43,13 +42,10 @@ try
             options.Authority = builder.Configuration["Authentication:Authority"];
 
             // confidential client using code flow + PKCE
-            options.ClientId = "twclient";
+            options.ClientId = "twwasm";
             options.ClientSecret = builder.Configuration["ClientSecret"];
             options.ResponseType = "code";
             options.ResponseMode = "query";
-
-            options.ClaimActions.MapUniqueJsonKey("address", "address");
-            options.TokenValidationParameters.NameClaimType = "address";
 
             options.MapInboundClaims = false;
             options.SaveTokens = true;
@@ -61,13 +57,10 @@ try
             options.Scope.Clear();
             options.Scope.Add("openid");
             options.Scope.Add("profile");
-            options.Scope.Add("tw-api.fullaccess");
-            options.Scope.Add("country");
             options.Scope.Add("fullname");
             options.Scope.Add("offline_access");
             options.ClaimActions.MapJsonKey("role", "role");
             options.ClaimActions.MapJsonKey("fullname", "fullname");
-            options.ClaimActions.MapUniqueJsonKey("country", "country");
 
             options.TokenValidationParameters = new()
             {
@@ -80,7 +73,6 @@ try
 
     app.UseSerilogRequestLogging();
 
-    // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
         app.UseWebAssemblyDebugging();
@@ -88,7 +80,6 @@ try
     else
     {
         app.UseExceptionHandler("/Error");
-        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
 
