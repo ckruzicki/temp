@@ -2,24 +2,13 @@
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        <Search />
     </div>
 
-    <main>
-        <div class="top-row px-4">
-            <AuthorizeView>
-                <Authorized>
-                    <strong>Hello, @(context.User.FindFirst("fullname").Value)!</strong>
-                    <a href="/bff/logout">Log out</a>
-                </Authorized>
-                <NotAuthorized>
-                    <a href="bff/login">Log in</a>
-                </NotAuthorized>
-            </AuthorizeView>
-        </div>
-
-        <article class="content px-4">
+    <main id="page-content-wrapper">
+        <NavMenu />
+        <div class="ml-2">
             @Body
-        </article>
+        </div>
     </main>
 </div>
