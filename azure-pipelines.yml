@@ -41,7 +41,7 @@ steps:
   displayName: 'Publish Wasm Server'
   inputs:
     command: 'publish'
-    publishWebProjects: true
+    publishWebProjects: false
     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectoryServer)'
     projects: '**/Server/TanglewoodCandleCo.Wasm.Server.csproj'
     zipAfterPublish: True
@@ -50,7 +50,7 @@ steps:
   displayName: 'Publish Wasm Client'
   inputs:
     command: 'publish'
-    publishWebProjects: true
+    publishWebProjects: false
     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectoryClient)'
     zipAfterPublish: True
 
