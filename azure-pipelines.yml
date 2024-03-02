@@ -25,13 +25,13 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: DotNetCoreCLI@1
-  displayName: Build Wasm Client Website
+  displayName: Build Wasm Server Website
   inputs:
     command: 'build'
-    projects: '**/Client/TanglewoodCandleCo.Wasm.Client.csproj'
+    projects: '**/Server/TanglewoodCandleCo.Wasm.Server.csproj'
 
 - task: DotNetCoreCLI@1
-  displayName: 'Publish Wasm Client Website'
+  displayName: 'Publish Wasm Server Website'
   inputs:
     command: 'publish'
     publishWebProjects: true
