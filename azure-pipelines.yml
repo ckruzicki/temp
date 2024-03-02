@@ -28,7 +28,7 @@ steps:
   displayName: Build Wasm Client Website
   inputs:
     command: 'build'
-    projects: '**/TanglewoodCandleCo.Wasm/Client/TanglewoodCandleCo.Wasm.Client.csproj'
+    projects: '**/Client/TanglewoodCandleCo.Wasm.Client.csproj'
 
 - task: DotNetCoreCLI@1
   displayName: 'Publish Wasm Client Website'
