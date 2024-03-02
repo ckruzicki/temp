@@ -7,12 +7,13 @@ trigger:
 - main
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'windows-2022'
 
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  artifactstagingdirectoryWeb: 'web'
 
 steps:
 - task: NuGetToolInstaller@1
@@ -23,15 +24,22 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
-- task: VSBuild@1
+- task: DotNetCoreCLI@1
   displayName: Build Wasm Client Website
   inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: 'build'
+    projects: '**/TanglewoodCandleCo.Wasm/Client/TanglewoodCandleCo.Wasm.Client.csproj'
 
-- task: VSTest@2
+- task: DotNetCoreCLI@1
+  displayName: 'Publish Wasm Client Website'
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectoryWeb)'
+    zipAfterPublish: True
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Wasm Web Artifact'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectoryWeb)'
+  condition: succeededOrFailed()
