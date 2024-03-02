@@ -14,8 +14,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   artifactstagingdirectoryServer: 'server'
-  artifactstagingdirectoryClient: 'client'
-
+  
 steps:
 - task: NuGetToolInstaller@1
   displayName: Install .NET Tools
@@ -31,12 +30,6 @@ steps:
     command: 'build'
     projects: '**/Server/TanglewoodCandleCo.Wasm.Server.csproj'
 
-- task: DotNetCoreCLI@2
-  displayName: Build Wasm Client
-  inputs:
-    command: 'build'
-    projects: '**/Client/TanglewoodCandleCo.Wasm.Client.csproj'
-
 - task: DotNetCoreCLI@1
   displayName: 'Publish Wasm Server'
   inputs:
@@ -46,22 +39,8 @@ steps:
     projects: '**/Server/TanglewoodCandleCo.Wasm.Server.csproj'
     zipAfterPublish: True
 
-- task: DotNetCoreCLI@2
-  displayName: 'Publish Wasm Client'
-  inputs:
-    command: 'publish'
-    publishWebProjects: false
-    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectoryClient)'
-    zipAfterPublish: True
-
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Wasm Server Artifact'
   inputs:
     PathtoPublish: '$(build.artifactstagingdirectoryServer)'
-  condition: succeededOrFailed()
-  
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Web Client Artifact'
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectoryClient)'
   condition: succeededOrFailed()
