@@ -4,13 +4,13 @@
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
 trigger:
-- main
+- master
 
 pool:
   vmImage: 'windows-2022'
 
 variables:
-  solution: '**/*.sln'
+  solution: 'TanglewoodCandleCo.Wasm.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   artifactstagingdirectoryWeb: 'web'
@@ -36,6 +36,7 @@ steps:
     command: 'publish'
     publishWebProjects: true
     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectoryWeb)'
+    projects: '**/Server/TanglewoodCandleCo.Wasm.Server.csproj'
     zipAfterPublish: True
 
 - task: PublishBuildArtifacts@1
