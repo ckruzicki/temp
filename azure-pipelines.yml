@@ -10,11 +10,11 @@ pool:
   vmImage: 'windows-2022'
 
 variables:
-  solution: 'TanglewoodCandleCo.Wasm.sln'
+  solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  artifactstagingdirectoryWeb: 'web'
-
+  artifactstagingdirectoryServer: 'server'
+  
 steps:
 - task: NuGetToolInstaller@1
   displayName: Install .NET Tools
@@ -25,22 +25,22 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: DotNetCoreCLI@1
-  displayName: Build Wasm Server Website
+  displayName: Build Wasm Server
   inputs:
     command: 'build'
     projects: '**/Server/TanglewoodCandleCo.Wasm.Server.csproj'
 
 - task: DotNetCoreCLI@1
-  displayName: 'Publish Wasm Server Website'
+  displayName: 'Publish Wasm Server'
   inputs:
     command: 'publish'
-    publishWebProjects: true
-    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectoryWeb)'
+    publishWebProjects: false
+    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectoryServer)'
     projects: '**/Server/TanglewoodCandleCo.Wasm.Server.csproj'
     zipAfterPublish: True
 
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish Wasm Web Artifact'
+  displayName: 'Publish Wasm Server Artifact'
   inputs:
-    PathtoPublish: '$(build.artifactstagingdirectoryWeb)'
+    PathtoPublish: '$(build.artifactstagingdirectoryServer)'
   condition: succeededOrFailed()
