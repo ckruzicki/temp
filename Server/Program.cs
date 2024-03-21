@@ -1,6 +1,9 @@
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -15,6 +18,9 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
+    builder.Services.AddRazorComponents()
+             .AddInteractiveWebAssemblyComponents();
+
     builder.Host.UseSerilog((ctx, lc) => lc
         .MinimumLevel.Information()
         .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
@@ -24,10 +30,12 @@ try
         .MinimumLevel.Override("Duende.Bff", LogEventLevel.Debug)
         .Enrich.FromLogContext()
         .WriteTo.Seq("http://localhost:5341")
-        .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}",theme: AnsiConsoleTheme.Literate));
+        .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Literate));
 
     builder.Services.AddControllersWithViews();
-    builder.Services.AddRazorPages();
+    builder.Services.AddRazorPages()
+        .AddMvcOptions(o => o.Filters.Add(new AuthorizeFilter())); 
+
     builder.Services.AddBff();
 
     builder.Services.AddAuthentication(options =>
@@ -35,39 +43,56 @@ try
         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
         options.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
-    }).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
-      .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+    })
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+    {
+        options.Cookie.Name = "__Host-blazor";
+        options.Cookie.SameSite = SameSiteMode.Strict;
+    })
+    .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
         {
-            options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+           // options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             options.Authority = builder.Configuration["Authentication:Authority"];
 
             // confidential client using code flow + PKCE
             options.ClientId = "twwasm";
             options.ClientSecret = builder.Configuration["ClientSecret"];
-            options.ResponseType = "code";
-            options.ResponseMode = "query";
-
-            options.MapInboundClaims = false;
-            options.SaveTokens = true;
-            options.GetClaimsFromUserInfoEndpoint = true;
-            options.ClaimActions.Remove("aud"); // Removes filter, makes sure it stays
-            options.ClaimActions.DeleteClaim("sid");
-            options.ClaimActions.DeleteClaim("idp");
+            options.ResponseType = OpenIdConnectResponseType.Code; //with PKCE
+            options.ResponseMode = OpenIdConnectResponseMode.Query;
 
             options.Scope.Clear();
             options.Scope.Add("openid");
             options.Scope.Add("profile");
+            options.Scope.Add("craft-api.fullaccess");
             options.Scope.Add("fullname");
             options.Scope.Add("offline_access");
-            options.ClaimActions.MapJsonKey("role", "role");
+            //options.ClaimActions.MapJsonKey("role", "role");
             options.ClaimActions.MapJsonKey("fullname", "fullname");
 
-            options.TokenValidationParameters = new()
-            {
-                NameClaimType = "given_name",
-                RoleClaimType = "role",
-            };
+            options.MapInboundClaims = false;            
+            options.GetClaimsFromUserInfoEndpoint = true;
+            options.SaveTokens = true;
+            //options.ClaimActions.Remove("aud"); // Removes filter, makes sure it stays
+            //options.ClaimActions.DeleteClaim("sid");
+            //options.ClaimActions.DeleteClaim("idp");
+
+            //options.TokenValidationParameters = new()
+            //{
+            //    NameClaimType = "given_name",
+            //    RoleClaimType = "role",
+            //};
         });
+
+    builder.Services.AddHttpClient();
+    builder.Services.AddControllers(); //prerender stuff
+
+    var client = new HttpClient();
+    var disco = await client.GetDiscoveryDocumentAsync("https://local-idp2.kruzicki.com");
+    if (disco.IsError)
+    {
+        Console.WriteLine(disco.Error);
+        return;
+    }
 
     var app = builder.Build();
 
@@ -89,13 +114,12 @@ try
     app.UseStaticFiles();
 
     app.UseRouting();
+
     app.UseAuthentication();
     app.UseBff();
     app.UseAuthorization();
 
     app.MapBffManagementEndpoints();
-
-    app.MapRazorPages();
 
     app.MapControllers()
         .RequireAuthorization()

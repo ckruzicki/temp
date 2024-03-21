@@ -1,21 +1,33 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>2559dae8-1211-4a6a-8a37-eaaffbf6f0ca</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="8.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="8.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Net.Http.Headers" Version="8.0.3" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.BrowserConsole" Version="2.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Shared\TanglewoodCandleCo.Wasm.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="TanglewoodCandleCo.Shared">
+      <HintPath>..\..\TanglewoodCandleCo.CraftApi\TanglewoodCandleCo.Shared\bin\Debug\net8.0\TanglewoodCandleCo.Shared.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

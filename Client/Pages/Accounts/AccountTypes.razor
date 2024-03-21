@@ -1,0 +1,36 @@
+﻿@page "/accounttypes"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+<PageTitle>Account Types</PageTitle>
+
+<div class="container-fluid mt-3">
+    <div class="align-text-top">
+        <div class="page-title">
+            <div class="btn-group">
+                <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Account Types
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        @recordCount
+                        <span class="visually-hidden">unread messages</span>
+                    </span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Add</a></li>
+                    <li><a class="dropdown-item" href="#">Bulk Add</a></li>
+                    <li><a class="dropdown-item" href="#">Report On</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <h3>Account Types</h3>
+    <div class="grid well">
+        <QuickGrid Items="@AccountTypeList" Virtualize="true" @ref="accountTypeGrid">
+            <PropertyColumn Title="PersonId" Property="@(p => p.Id)" Sortable="true" IsDefaultSortColumn="true" />
+            <PropertyColumn Title="Name" Property="@(p => p.Name)" Sortable="true" />
+            <PropertyColumn Title="Promotion Date" Property="@(p => p.DateCreated)" Format="MM-dd-yyyy" Sortable="true" />
+        </QuickGrid>
+    </div>
+</div>
+
