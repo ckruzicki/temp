@@ -5,7 +5,6 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>2559dae8-1211-4a6a-8a37-eaaffbf6f0ca</UserSecretsId>
-	<PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,9 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="TanglewoodCandleCo.Shared">
-      <HintPath>..\..\TanglewoodCandleCo.CraftApi\TanglewoodCandleCo.Shared\bin\Debug\net8.0\TanglewoodCandleCo.Shared.dll</HintPath>
-    </Reference>
+	  <Reference Include="TanglewoodCandleCo.Shared" />
   </ItemGroup>
 
 </Project>
