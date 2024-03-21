@@ -1,7 +1,79 @@
 ﻿@page "/purchases"
 
-<h3>Purchases</h3>
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using TanglewoodCandleCo.Wasm.Client.Components
+<div class="card" style="height: 33px;">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Library</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Data</li>
+        </ol>
+    </nav>
+</div>
+<br />
+<PageTitle>Promotion Grid</PageTitle>
 
+<SearchBox Items="people.ToList()" OnSearch="DoSutff"></SearchBox>
+@* 
+<div class="sidebar">
+    <Search />
+</div> *@
+
+
+@* 
+    <PropertyColumn Title="Id" Property="@(p => p.PersonId)" Sortable="true" IsDefaultSortColumn="true">
+            <ColumnOptions>
+                <div class="search-box">
+                    <input type="search" autofocus @bind="nameSearch" @bind:event="oninput" placeholder="Person name..." />
+                </div>
+            </ColumnOptions>
+        </PropertyColumn>
+
+        
+*@
+
+<h1>Promotion Grid Example</h1>
+<div class="grid well">
+    <QuickGrid Items="@people" Virtualize="true" @ref="personGrid">
+        <PropertyColumn Title="PersonId" Property="@(p => p.PersonId)" Sortable="true" IsDefaultSortColumn="true" />
+        <PropertyColumn Title="Dork Name" Property="@(p => p.Name)" Sortable="true">
+            <ColumnOptions>
+                <div class="search-box">
+                    <input type="search" autofocus @bind="nameSearch" @bind:event="oninput" placeholder="Person name..." />
+                </div>
+            </ColumnOptions>
+        </PropertyColumn>
+        <PropertyColumn Title="Promotion Date" Property="@(p => p.PromotionDate)" Format="yyyy-MM-dd" Sortable="true" />
+
+    </QuickGrid>
+
+</div>
+<div class="my-2">
+    <div class="search-box inline-block mr-4 my-1">
+        <input type="search" autofocus @bind="nameSearch" @bind:event="oninput" @bind:after="()=>personGrid.RefreshDataAsync()" placeholder="Product name..." />
+    </div>
+
+    <div class="inline-block my-1">
+        Total: <strong>@numResults results found</strong>
+    </div>
+</div>
 @code {
+    // private record Person(int PersonId, string Name, DateOnly PromotionDate);
+
+    // private IQueryable<Person> people = new[]
+    // {
+    //     new Person(10895, "Jean Martin", new DateOnly(1985, 3, 16)),
+    //     new Person(10944, "António Langa", new DateOnly(1991, 12, 1)),
+    //     new Person(11203, "Julie Smith", new DateOnly(1958, 10, 10)),
+    //     new Person(11205, "Nur Sari", new DateOnly(1922, 4, 27)),
+    //     new Person(11898, "Jose Hernandez", new DateOnly(2011, 5, 3)),
+    //     new Person(12130, "Kenji Sato", new DateOnly(2004, 1, 9)),
+    // }.AsQueryable();
+
+    public void DoSutff(string value)
+    {
+        
+    }
 
 }
