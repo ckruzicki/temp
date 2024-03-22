@@ -86,14 +86,6 @@ try
     builder.Services.AddHttpClient();
     builder.Services.AddControllers(); //prerender stuff
 
-    var client = new HttpClient();
-    var disco = await client.GetDiscoveryDocumentAsync("https://local-idp2.kruzicki.com");
-    if (disco.IsError)
-    {
-        Console.WriteLine(disco.Error);
-        return;
-    }
-
     var app = builder.Build();
 
     app.UseSerilogRequestLogging();
