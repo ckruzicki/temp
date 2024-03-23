@@ -16,7 +16,7 @@ namespace TanglewoodCandleCo.Wasm.Client.Services
 
             Configuration = configuration;
 
-            var baseUri = Configuration.GetSection("BaseUrl").Value;
+            var baseUri = Configuration.GetValue<string>("BaseUrl");
 
             _httpClient.BaseAddress = new Uri(baseUri.ToString());
             _httpClient.Timeout = new TimeSpan(0, 0, 120);
