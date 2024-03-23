@@ -35,7 +35,7 @@
     <script>
         if (window.location.hostname.includes("local")) {
             Blazor.start({ environment: "Development" });
-        } else if (windows.location.hostname.includes("sbx")) {
+        } else if (window.location.hostname.includes("sbx")) {
             Blazor.start({ environment: "Staging" });
         } else {
             Blazor.start({ environment: "Production" });
