@@ -1,7 +1,7 @@
-@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+/*@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');*/
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
 }
 
 h1:focus {
@@ -104,5 +104,40 @@ a, .btn-link {
     color: #000000;
     font-size: 18px;
     font-weight: bold;
-    margin: 2px 5px 5px 5px;
+    margin: 2px 5px 10px 5px;
+}
+
+/* visited link */
+a:visited, a:link, .tw-link {
+    color: black;
+    text-decoration: none;
+}
+
+/* mouse over link */
+a:hover, a:active, .tw-link {
+    color: #62A441;
+    text-decoration: underline;
+}
+
+/* offcanvas styles */
+.btn-close:hover, .modal-close:hover {
+    background-color: red;
+    border: none;
+    font: bold;
+}
+.offcanvas-header {
+    background-color: #FFFBE5;
+    font: bolder;
+}
+.tw-popright {
+    width: 650px;
+    background-color: #ACD5DA;
+}
+
+.tw-label {
+    color: #008190;
+    font-size: small;
+}
+.tw-data {
+    font-size: small;
 }

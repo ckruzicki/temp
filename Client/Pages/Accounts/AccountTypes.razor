@@ -1,13 +1,20 @@
 ﻿@page "/accounttypes"
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.QuickGrid
+@using TanglewoodCandleCo.Shared.dbo
+@inject AuthenticationStateProvider AuthenticationStateProvider
+<style>
 
-<PageTitle>Account Types</PageTitle>
+</style>
 
-<div class="container-fluid mt-3">
-    <div class="align-text-top">
-        <div class="page-title">
-            <div class="btn-group">
+@if (AccountTypeList == null)
+{
+    <TwSpinner LoadingName="Account Types" />
+}
+else
+{
+    <div class="container-fluid mt-3">
+        <div class="align-text-top">
+            <div class="btn-group float-right">
                 <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     Account Types
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -16,21 +23,46 @@
                     </span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Add</a></li>
-                    <li><a class="dropdown-item" href="#">Bulk Add</a></li>
-                    <li><a class="dropdown-item" href="#">Report On</a></li>
+                    <li><a href="javascript:void(0);" class="dropdown-item" onclick="@(() => AddAccountType())">
+                            <Icon Name="IconName.PlusCircleFill" Size="IconSize.None" Color="IconColor.Success" /> Create
+                        </a>
+                    </li>
+                    <li><a href="javascript:void(0);" class="dropdown-item">Bulk Add</a></li>
+                    <li><a href="javascript:void(0);" class="dropdown-item">Report On</a></li>
                 </ul>
             </div>
+            <div class="page-title">
+                Account Types
+            </div>
         </div>
-    </div>
 
-    <h3>Account Types</h3>
-    <div class="grid well">
-        <QuickGrid Items="@AccountTypeList" Virtualize="true" @ref="accountTypeGrid">
-            <PropertyColumn Title="PersonId" Property="@(p => p.Id)" Sortable="true" IsDefaultSortColumn="true" />
-            <PropertyColumn Title="Name" Property="@(p => p.Name)" Sortable="true" />
-            <PropertyColumn Title="Promotion Date" Property="@(p => p.DateCreated)" Format="MM-dd-yyyy" Sortable="true" />
-        </QuickGrid>
     </div>
-</div>
+    <br />
+    <Grid @ref="accountTypeGrid"
+          TItem="AccountType"
+          AllowSorting="true"
+          Class="table table-hover"
+          Data="AccountTypeList"
+          AllowPaging="true"
+          PageSize="20"
+          AllowRowClick="true"
+          OnRowClick="OnRowClick"
+          HeaderRowCssClass="bg-success text-white border-bottom-0"
+          Responsive="true">
+        <GridColumn TItem="AccountType" Context="ac" HeaderText="Name" PropertyName="Name" SortKeySelector="item => item.Name">
+            <a href="javascript:void(0);" onclick="@(() => ShowAccountTypeDetails(1))">
+                @ac.Name
+            </a>
+        </GridColumn>
+        <GridColumn TItem="AccountType" HeaderText="Active" PropertyName="IsActive">
+            @context.IsActive
+        </GridColumn>
+    </Grid>
+}
 
+<Offcanvas @ref="offcanvasAdd" Class="tw-popright" Size="OffcanvasSize.Large">
+    <FooterTemplate>
+        <Button Color="ButtonColor.Primary" Size="Size.Small" @onclick="OnHideOffcanvasClick">Cancel</Button>
+    </FooterTemplate>
+</Offcanvas>
+<Offcanvas @ref="offcanvas" Class="tw-popright" Size="OffcanvasSize.Large" />

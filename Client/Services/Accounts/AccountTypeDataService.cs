@@ -12,12 +12,22 @@ namespace TanglewoodCandleCo.Wasm.Client.Services.Accounts
 
         public async Task<IEnumerable<AccountType>> GetAccountTypesAsync()
         {
-            return await HttpRequestForListAsync<AccountType>(HttpMethod.Get, "accounttype");
+            return await HttpRequestForListAsync<AccountType>(HttpMethod.Get, "api/accounttype");
         }
 
-        public Task<AccountType> AddAccountType(AccountType accountType)
+        public async Task<AccountType> CreateAccountType(AccountType accountType)
         {
-            throw new NotImplementedException();
+            return await HttpRequestForCreateAsync(HttpMethod.Post, "api/accounttype", accountType);
+        }
+
+        public async Task<AccountType> UpdateAccountType(AccountType accountType)
+        {
+            return await HttpRequestForUpdateAsync(HttpMethod.Put, "api/accountType", accountType);
+        }
+
+        public async Task DeleteAccountType(int id)
+        {
+            await _httpClient.DeleteAsync($"api/accounttype/{id}");
         }
     }
 }

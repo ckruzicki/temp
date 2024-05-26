@@ -47,8 +47,7 @@ nav {
         }
 
         .nav-item ::deep a:hover {
-            background-color: #62A441;
-            color: black;
+            color: white;
         }
 
 
@@ -67,4 +66,10 @@ nav {
         height: calc(100vh - 3.5rem);
         overflow-y: auto;
     }
+}
+
+MainContainer, .pin, .main-container {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
 }

@@ -12,16 +12,32 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // authentication state and authorization
 builder.Services.AddAuthorizationCore();
-builder.Services.AddScoped<AuthenticationStateProvider, BffAuthenticationStateProvider>();
+//builder.Services.AddScoped<AuthenticationStateProvider, BffAuthenticationStateProvider>();
 
+
+//builder.Services.AddOidcAuthentication(options =>
+//{
+//    builder.Configuration.Bind("OidcConfiguration", options.ProviderOptions);
+//});
 // HTTP client configuration
-builder.Services.AddTransient<AntiforgeryHandler>();
+//builder.Services.AddTransient<AntiforgeryHandler>();
 
-builder.Services.AddHttpClient("backend", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
-    .AddHttpMessageHandler<AntiforgeryHandler>();
-builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("backend"));
+//builder.Services.AddHttpClient("backend", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+//    .AddHttpMessageHandler<AntiforgeryHandler>();
+
+builder.Services.AddSingleton(sp =>
+{
+    var client = new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) };
+    client.DefaultRequestHeaders.Add("X-CSRF", "1");
+    return client;
+});
+
+
+//builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("backend"));
 
 //builder.Services.AddCustomHttpClient<IAccountTypeDataService, AccountTypeDataService>(builder.Configuration);
-builder.Services.AddHttpClient<IAccountTypeDataService, AccountTypeDataService>();
+builder.Services.AddSingleton<IAccountTypeDataService, AccountTypeDataService>();
+builder.Services.AddSingleton<AuthenticationStateProvider, ServerAuthenticationStateProvider>(); //added
+builder.Services.AddBlazorBootstrap();
 
 await builder.Build().RunAsync();

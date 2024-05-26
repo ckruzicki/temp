@@ -1,0 +1,50 @@
+﻿<form>
+    <div class="offcanvas-body">
+        <label class="tw-label">Account Type Name</label><br />
+        <label class="tw-data">@AccountTypeVm.Name</label>
+        <br />
+        <hr />
+        <Button Color="ButtonColor.Success" Size="Size.Small" Outline="true" onclick="@(() => Edit(true))" >
+            <Icon Name="IconName.Floppy" /> Edit 
+        </Button>
+        <Button Color="ButtonColor.Success" Size="Size.Small" Outline="true" onclick="@(() => Edit(false))">
+            <Icon Name="IconName.Copy" /> Clone 
+        </Button>
+
+        <Dropdown Size="Size.Small">
+            <DropdownToggleButton Color="ButtonColor.Success"> ... </DropdownToggleButton>
+            <DropdownMenu>
+                <DropdownItem To="#" Type="ButtonType.Button" onclick="@(() => Delete())">
+                    <Icon Name="IconName.DashCircleFill" Size="IconSize.None" Color="IconColor.Success" /> Delete
+                </DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
+        <br />
+        <Tabs EnableFadeEffect="true" NavStyle="NavStyle.Underline">
+            <Tab Title="History" IsActive="true">
+                <Content>
+                    <p class="mt-3">History here</p>
+                </Content>
+            </Tab>
+            <Tab Title="Info">
+                <Content>
+                    <p class="mt-3">
+                        <label class="tw-label">Id:</label>
+                        <label class="tw-data">@AccountType.Id</label><br/>
+                        <label class="tw-label">Created By:</label>
+                        <label class="tw-data">@AccountType.CreatedBy</label><br/>
+                        <label class="tw-label">Date Created:</label>
+                        <label class="tw-data">@AccountType.DateCreated</label>
+                    </p>
+                </Content>
+            </Tab>
+        </Tabs>
+
+    </div>
+</form>
+
+<Offcanvas @ref="offcanvas" Class="tw-popright" Size="OffcanvasSize.Large">
+    <FooterTemplate>
+        <Button Color="ButtonColor.Primary" Size="Size.Small" @onclick="OnHideOffcanvasClick">Cancel</Button>
+    </FooterTemplate>
+</Offcanvas>

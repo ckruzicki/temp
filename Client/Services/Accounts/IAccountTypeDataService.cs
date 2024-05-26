@@ -5,6 +5,8 @@ namespace TanglewoodCandleCo.Wasm.Client.Services
     public interface IAccountTypeDataService
     {
         Task<IEnumerable<AccountType>> GetAccountTypesAsync();
-        Task<AccountType> AddAccountType(AccountType accountType);
+        Task<AccountType> CreateAccountType(AccountType accountType);
+        Task<AccountType> UpdateAccountType(AccountType accountType);
+        Task DeleteAccountType(int id);
     }
 }

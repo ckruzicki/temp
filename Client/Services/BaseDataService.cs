@@ -1,5 +1,8 @@
-﻿using System.Net.Http.Headers;
+﻿using Serilog;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
+
 
 namespace TanglewoodCandleCo.Wasm.Client.Services
 {
@@ -15,26 +18,89 @@ namespace TanglewoodCandleCo.Wasm.Client.Services
                 ?? throw new ArgumentNullException(nameof(httpClient));
 
             Configuration = configuration;
-
-            var baseUri = Configuration.GetValue<string>("BaseUrl");
-
-            _httpClient.BaseAddress = new Uri(baseUri.ToString());
-            _httpClient.Timeout = new TimeSpan(0, 0, 120);
         }
 
         protected async Task<IEnumerable<T>> HttpRequestForListAsync<T>(HttpMethod httpMethod, string requestUri)
         {
-            var request = SetHeaders(httpMethod, requestUri);
-
-            using (var response = await _httpClient.SendAsync(request,
-                 HttpCompletionOption.ResponseHeadersRead)
-                     .ConfigureAwait(false))
+            try
             {
-                var stream = await response.Content.ReadAsStreamAsync()
-                    .ConfigureAwait(false);
-                response.EnsureSuccessStatusCode();
+                var request = SetHeaders(httpMethod, requestUri);
 
-                return JsonSerializer.Deserialize<List<T>>(stream, _options);
+                //var client = new HttpClient();
+                //var disco = await client.GetDiscoveryDocumentAsync("https://demo.duendesoftware.com");
+
+                // var disco = await _httpClient.GetDiscoveryDocumentAsync("https://local-idp2.kruzicki.com");
+
+                //not tested
+                //var accessToken = await _httpClient.GetTokenAsync("access_token");
+                //httpMethod.GetUserAccessTokenAsync();
+
+                //return await _httpClient.GetFromJsonAsync<IEnumerable<T>>(requestUri);
+
+                using (var response = await _httpClient.SendAsync(request,
+                     HttpCompletionOption.ResponseHeadersRead)
+                         .ConfigureAwait(false))
+                {
+                    var stream = await response.Content.ReadAsStreamAsync()
+                        .ConfigureAwait(false);
+                    response.EnsureSuccessStatusCode();
+
+                    return JsonSerializer.Deserialize<List<T>>(stream, _options);
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        protected Task<T> HttpRequestForUpdateAsync<T>(HttpMethod httpMethod, string requrestUri, T data)
+        {
+            return HttpRequestForCreateAsync(httpMethod, requrestUri, data);
+        }
+
+        protected async Task<T> HttpRequestForCreateAsync<T>(HttpMethod httpMethod, string requrestUri, T data, StringContent sc = null)
+        {
+            try
+            {
+                // TODO: Getfullname
+                // var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();                
+
+                var request = SetHeaders(httpMethod, requrestUri);
+
+                if (sc != null)
+                    request.Content = sc;
+                else
+                    request.Content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+
+                request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+                using (var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead))
+                {
+                    var stream = await response.Content.ReadAsStreamAsync();
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        string type = httpMethod == HttpMethod.Post ? "Create" : "Update";
+
+                        if (response.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
+                        {
+                            var validationErrors = JsonSerializer.Deserialize<T>(stream, _options);
+                            Log.Error($"Validation Error in SendRequestFor{type} " + validationErrors);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                        {
+                            Log.Error($"Authorization Error in SendRequestFor{type} " + response.RequestMessage);
+                        }
+                        response.EnsureSuccessStatusCode();
+                        throw null;
+                    }
+
+                    return await JsonSerializer.DeserializeAsync<T>(stream, _options);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
             }
         }
 
