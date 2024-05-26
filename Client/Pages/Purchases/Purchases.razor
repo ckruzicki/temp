@@ -1,6 +1,5 @@
 ﻿@page "/purchases"
 
-@using Microsoft.AspNetCore.Components.QuickGrid
 @using TanglewoodCandleCo.Wasm.Client.Components
 <div class="card" style="height: 33px;">
     <nav aria-label="breadcrumb">
@@ -14,7 +13,7 @@
 <br />
 <PageTitle>Promotion Grid</PageTitle>
 
-<SearchBox Items="people.ToList()" OnSearch="DoSutff"></SearchBox>
+@* <SearchBox Items="people.ToList()" OnSearch="DoSutff"></SearchBox> *@
 @* 
 <div class="sidebar">
     <Search />
@@ -35,7 +34,7 @@
 
 <h1>Promotion Grid Example</h1>
 <div class="grid well">
-    <QuickGrid Items="@people" Virtualize="true" @ref="personGrid">
+   @*  <QuickGrid Items="@people" Virtualize="true" @ref="personGrid">
         <PropertyColumn Title="PersonId" Property="@(p => p.PersonId)" Sortable="true" IsDefaultSortColumn="true" />
         <PropertyColumn Title="Dork Name" Property="@(p => p.Name)" Sortable="true">
             <ColumnOptions>
@@ -46,17 +45,17 @@
         </PropertyColumn>
         <PropertyColumn Title="Promotion Date" Property="@(p => p.PromotionDate)" Format="yyyy-MM-dd" Sortable="true" />
 
-    </QuickGrid>
+    </QuickGrid> *@
 
 </div>
 <div class="my-2">
-    <div class="search-box inline-block mr-4 my-1">
+   @*  <div class="search-box inline-block mr-4 my-1">
         <input type="search" autofocus @bind="nameSearch" @bind:event="oninput" @bind:after="()=>personGrid.RefreshDataAsync()" placeholder="Product name..." />
     </div>
 
     <div class="inline-block my-1">
         Total: <strong>@numResults results found</strong>
-    </div>
+    </div> *@
 </div>
 @code {
     // private record Person(int PersonId, string Name, DateOnly PromotionDate);

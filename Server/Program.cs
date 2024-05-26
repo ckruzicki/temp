@@ -160,7 +160,7 @@ try
 
     app.UseEndpoints(e => {
         e.MapBffManagementEndpoints();
-        e.MapRemoteBffApiEndpoint("/api", "https://localhost:7096/api")
+        e.MapRemoteBffApiEndpoint("/api", builder.Configuration["BaseUrl"])
             .RequireAccessToken();
     });
 
