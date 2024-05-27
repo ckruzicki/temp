@@ -36,10 +36,10 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <AuthorizeView>
                         <Authorized>
+                            <strong>Hello, @(context?.User?.FindFirst("fullname").Value)!</strong>&nbsp;
                             <Button Color="ButtonColor.Success" Size="Size.Small">
                                 <a href="/Account/logout">Logout</a>
                             </Button>
-                            <strong>Hello, @(context?.User?.FindFirst("fullname").Value)!</strong>
                         </Authorized>
                         <NotAuthorized>
                             <Button Color="ButtonColor.Danger" Size="Size.Small" Outline="true">

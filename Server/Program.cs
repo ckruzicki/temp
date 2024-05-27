@@ -38,12 +38,6 @@ try
     builder.Services.AddControllersWithViews();
     builder.Services.AddRazorPages();
     ///.AddMvcOptions(o => o.Filters.Add(new AuthorizeFilter())); 
-
-
-
-
-
-
     builder.Services.AddBff(o => o.ManagementBasePath = "/account")
         .AddRemoteApis()
         .AddServerSideSessions();

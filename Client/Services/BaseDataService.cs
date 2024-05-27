@@ -50,7 +50,8 @@ namespace TanglewoodCandleCo.Wasm.Client.Services
             }
             catch (Exception ex)
             {
-                return null;
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message, ex.InnerException);
             }
         }
         protected Task<T> HttpRequestForUpdateAsync<T>(HttpMethod httpMethod, string requrestUri, T data)
@@ -100,7 +101,9 @@ namespace TanglewoodCandleCo.Wasm.Client.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
+                //NavigationManager.NavigateTo("Error");
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message, ex);                
             }
         }
 
