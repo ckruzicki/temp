@@ -1,7 +1,7 @@
 ﻿using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
 using TanglewoodCandleCo.Shared.dbo;
-using TanglewoodCandleCo.Wasm.Client.Services;
+using TanglewoodCandleCo.Wasm.Client.Services.Accounts;
 using TanglewoodCandleCo.Wasm.Client.ViewModels.Accounts;
 using TanglewoodCandleCo.Wasm.Shared;
 
@@ -29,7 +29,7 @@ public partial class AccountTypes : ComponentBase
     private Grid<AccountType> accountTypeGrid;
     protected override async Task OnInitializedAsync()
     {
-        AccountTypeList = (List<AccountType>)await AccountTypeDataService.GetAccountTypesAsync(); //).AsQueryable();
+        AccountTypeList = (List<AccountType>)await AccountTypeDataService.GetAccountTypesAsync();
         if (AccountTypeList != null)
         {
             recordCount = AccountTypeList.Count().ToString();
@@ -83,13 +83,6 @@ public partial class AccountTypes : ComponentBase
     {
         if(showFlyout == false) 
             return;
-
-        //var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        //var user = authState.User;
-        //var t = user.FindFirst("fullname").Value;
-
-        //user.Claims.FirstOrDefault(user.Claims.Subject)
-        //    //context?.User?.FindFirst("fullname").Value
 
         currentIdx = AccountTypeList.FindIndex(x => x.Id == accountTypes.Item.Id);
         var title = accountTypes.Item.Name.ToString();

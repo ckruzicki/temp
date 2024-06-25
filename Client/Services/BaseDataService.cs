@@ -1,8 +1,8 @@
-﻿using Serilog;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using Serilog;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-
 
 namespace TanglewoodCandleCo.Wasm.Client.Services
 {
@@ -11,13 +11,15 @@ namespace TanglewoodCandleCo.Wasm.Client.Services
         protected HttpClient _httpClient;
         private readonly JsonSerializerOptions _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         protected IConfiguration Configuration { get; }
+        protected AuthenticationStateProvider AuthenticationStateProvider { get; }
 
-        protected BaseDataService(HttpClient httpClient, IConfiguration configuration) 
+        protected BaseDataService(HttpClient httpClient, IConfiguration configuration, AuthenticationStateProvider auth) 
         { 
             _httpClient = httpClient
                 ?? throw new ArgumentNullException(nameof(httpClient));
 
             Configuration = configuration;
+            AuthenticationStateProvider = auth;
         }
 
         protected async Task<IEnumerable<T>> HttpRequestForListAsync<T>(HttpMethod httpMethod, string requestUri)
@@ -25,17 +27,6 @@ namespace TanglewoodCandleCo.Wasm.Client.Services
             try
             {
                 var request = SetHeaders(httpMethod, requestUri);
-
-                //var client = new HttpClient();
-                //var disco = await client.GetDiscoveryDocumentAsync("https://demo.duendesoftware.com");
-
-                // var disco = await _httpClient.GetDiscoveryDocumentAsync("https://local-idp2.kruzicki.com");
-
-                //not tested
-                //var accessToken = await _httpClient.GetTokenAsync("access_token");
-                //httpMethod.GetUserAccessTokenAsync();
-
-                //return await _httpClient.GetFromJsonAsync<IEnumerable<T>>(requestUri);
 
                 using (var response = await _httpClient.SendAsync(request,
                      HttpCompletionOption.ResponseHeadersRead)
@@ -63,9 +54,7 @@ namespace TanglewoodCandleCo.Wasm.Client.Services
         {
             try
             {
-                // TODO: Getfullname
-                // var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();                
-
+                await SetUserFullname(data, httpMethod);
                 var request = SetHeaders(httpMethod, requrestUri);
 
                 if (sc != null)
@@ -86,11 +75,11 @@ namespace TanglewoodCandleCo.Wasm.Client.Services
                         if (response.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
                         {
                             var validationErrors = JsonSerializer.Deserialize<T>(stream, _options);
-                            Log.Error($"Validation Error in SendRequestFor{type} " + validationErrors);
+                            Log.Error($"Validation Error in SendRequestFor {type} " + validationErrors);
                         }
                         else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                         {
-                            Log.Error($"Authorization Error in SendRequestFor{type} " + response.RequestMessage);
+                            Log.Error($"Authorization Error in SendRequestFor {type} " + response.RequestMessage);
                         }
                         response.EnsureSuccessStatusCode();
                         throw null;
@@ -101,7 +90,6 @@ namespace TanglewoodCandleCo.Wasm.Client.Services
             }
             catch (Exception ex)
             {
-                //NavigationManager.NavigateTo("Error");
                 Console.WriteLine(ex.Message);
                 throw new Exception(ex.Message, ex);                
             }
@@ -115,6 +103,47 @@ namespace TanglewoodCandleCo.Wasm.Client.Services
             header.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
 
             return header;
+        }
+
+        /// <summary>
+        /// This needs to be put at the server level
+        /// </summary>
+        /// <typeparam name="T">Typeof Record</typeparam>
+        /// <param name="data">Data being sent to server</param>
+        /// <param name="verb">Http Method</param>
+        /// <returns></returns>
+        protected async Task SetUserFullname<T>(T data, HttpMethod verb)
+        {
+            dynamic type = (T)data;
+
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            if (!authState.User.Identity.IsAuthenticated)
+            {
+                if (verb == HttpMethod.Post)
+                    type.CreatedBy = "Unauthorized User";
+                else if (verb == HttpMethod.Put || verb == HttpMethod.Delete)
+                    type.UpdatedBy = "Unauthorized User";
+            }
+            else
+            {
+                var fullname = authState.User.Claims.FirstOrDefault(x => x.Type == "fullname");
+                if (fullname != null)
+                {
+                    if (verb == HttpMethod.Post)
+                        type.CreatedBy = fullname.Value;
+                    else if (verb == HttpMethod.Put || verb == HttpMethod.Delete)
+                        type.UpdatedBy = fullname.Value;
+                }
+                else
+                {
+                    if (verb == HttpMethod.Post)
+                        type.CreatedBy = "Unknown User";
+                    else if (verb == HttpMethod.Put)
+                        type.UpdatedBy = "Unknown User";
+                }
+            }
+
+            data = type;
         }
     }
 }

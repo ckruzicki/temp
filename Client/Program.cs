@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using TanglewoodCandleCo.Wasm.Client;
 using TanglewoodCandleCo.Wasm.Client.BFF;
-using TanglewoodCandleCo.Wasm.Client.Services;
 using TanglewoodCandleCo.Wasm.Client.Services.Accounts;
+using TanglewoodCandleCo.Wasm.Client.Services.Systems;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -32,12 +32,11 @@ builder.Services.AddSingleton(sp =>
     return client;
 });
 
-
-//builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("backend"));
-
-//builder.Services.AddCustomHttpClient<IAccountTypeDataService, AccountTypeDataService>(builder.Configuration);
+builder.Services.AddSingleton<IAccountDataService, AccountDataService>(); 
 builder.Services.AddSingleton<IAccountTypeDataService, AccountTypeDataService>();
-builder.Services.AddSingleton<AuthenticationStateProvider, ServerAuthenticationStateProvider>(); //added
+builder.Services.AddSingleton<ISystemDataService, SystemDataService>();
+
+builder.Services.AddSingleton<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
 builder.Services.AddBlazorBootstrap();
 
 await builder.Build().RunAsync();

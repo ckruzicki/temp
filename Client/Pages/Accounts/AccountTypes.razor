@@ -1,18 +1,13 @@
 ﻿@page "/accounttypes"
-@using Microsoft.AspNetCore.Authorization
 @using TanglewoodCandleCo.Shared.dbo
-@inject AuthenticationStateProvider AuthenticationStateProvider
-<style>
-
-</style>
 
 @if (AccountTypeList == null)
 {
-    <TwSpinner LoadingName="Account Types" />
+    <TwSpinner LoadingName="Account Types"></TwSpinner>
 }
 else
 {
-    <div class="container-fluid mt-3">
+    <div class="tw-page container-fluid">
         <div class="align-text-top">
             <div class="btn-group float-right">
                 <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -37,7 +32,7 @@ else
         </div>
 
     </div>
-    <br />
+    
     <Grid @ref="accountTypeGrid"
           TItem="AccountType"
           AllowSorting="true"
@@ -60,7 +55,7 @@ else
     </Grid>
 }
 
-<Offcanvas @ref="offcanvasAdd" Class="tw-popright" Size="OffcanvasSize.Large">
+<Offcanvas @ref="offcanvasAdd" Class="tw-popright" Size="OffcanvasSize.Small">
     <FooterTemplate>
         <Button Color="ButtonColor.Primary" Size="Size.Small" @onclick="OnHideOffcanvasClick">Cancel</Button>
     </FooterTemplate>

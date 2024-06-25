@@ -1,14 +1,12 @@
-﻿using System.Text.Json;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using TanglewoodCandleCo.Shared.dbo;
 
 namespace TanglewoodCandleCo.Wasm.Client.Services.Accounts
 {
     public class AccountTypeDataService : BaseDataService, IAccountTypeDataService
     {
-        private readonly JsonSerializerOptions _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-
-        public AccountTypeDataService(HttpClient httpClient, IConfiguration configuration)
-            : base(httpClient, configuration) { }
+        public AccountTypeDataService(HttpClient httpClient, IConfiguration configuration, AuthenticationStateProvider auth)
+            : base(httpClient, configuration, auth) { }
 
         public async Task<IEnumerable<AccountType>> GetAccountTypesAsync()
         {

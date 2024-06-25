@@ -30,11 +30,6 @@ public class AccountTypeViewModel
             Id = Id,
             Name = Name,
             IsActive = IsActive,
-            CreatedBy = SetCreatedBy()
         };
-    }
-    private string SetCreatedBy()
-    {
-        return "Corey Testing";
     }
 }

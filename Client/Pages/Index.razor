@@ -1,17 +1,20 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Tanglewood Candle Co.</PageTitle>
 
-<h1>Future WASM Tanglewood Candles admin site</h1>
-
-<AuthorizeView>
-    <Authorized>
-        <dl>
-            @foreach (var claim in @context.User.Claims)
-            {
-                <dt>@claim.Type</dt>
-                <dd>@claim.Value</dd>
-            }
-        </dl>
-    </Authorized>
-</AuthorizeView>
+<div class="tw-page">
+    <AuthorizeView>
+        <NotAuthorized>
+            <h1>Future WASM Tanglewood Candles admin site</h1>
+        </NotAuthorized>
+        <Authorized>
+            <dl>
+                @foreach (var claim in @context.User.Claims)
+                {
+                    <dt>@claim.Type</dt>
+                    <dd>@claim.Value</dd>
+                }
+            </dl>
+        </Authorized>
+    </AuthorizeView>
+</div>

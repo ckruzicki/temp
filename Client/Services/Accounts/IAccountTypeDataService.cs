@@ -1,6 +1,6 @@
 ﻿using TanglewoodCandleCo.Shared.dbo;
 
-namespace TanglewoodCandleCo.Wasm.Client.Services
+namespace TanglewoodCandleCo.Wasm.Client.Services.Accounts
 {
     public interface IAccountTypeDataService
     {

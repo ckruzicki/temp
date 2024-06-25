@@ -7,8 +7,6 @@ public partial class Account
 {
     public int Id { get; set; }
 
-    public int AccountTypeId { get; set; }
-
     public string? Fullname { get; set; }
 
     public string LastName { get; set; } = null!;
@@ -55,5 +53,7 @@ public partial class Account
 
     public string? UpdatedBy { get; set; }
 
-    public virtual AccountType AccountType { get; set; } = null!;
+    public int RecordtypeId { get; set; }
+
+    public virtual Recordtype Recordtype { get; set; } = null!;
 }

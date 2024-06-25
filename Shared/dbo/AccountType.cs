@@ -18,6 +18,4 @@ public partial class AccountType
     public DateTime? DateUpdated { get; set; }
 
     public string? UpdatedBy { get; set; }
-
-    public virtual ICollection<Account> Account { get; set; } = new List<Account>();
 }

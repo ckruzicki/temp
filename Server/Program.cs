@@ -155,7 +155,7 @@ try
     app.UseEndpoints(e => {
         e.MapBffManagementEndpoints();
         e.MapRemoteBffApiEndpoint("/api", builder.Configuration["BaseUrl"])
-            .RequireAccessToken();
+            .RequireAccessToken(); //disable for local development...
     });
 
     app.MapFallbackToFile("index.html");

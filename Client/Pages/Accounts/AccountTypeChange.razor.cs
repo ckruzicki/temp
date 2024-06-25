@@ -1,12 +1,12 @@
 ﻿using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
-using Serilog;
 using TanglewoodCandleCo.Shared.dbo;
-using TanglewoodCandleCo.Wasm.Client.Services;
+using TanglewoodCandleCo.Wasm.Client.Services.Accounts;
 using TanglewoodCandleCo.Wasm.Client.ViewModels.Accounts;
 using TanglewoodCandleCo.Wasm.Shared;
 
 namespace TanglewoodCandleCo.Wasm.Client.Pages.Accounts;
+
 public partial class AccountTypeChange
 {
     #region Parameters
@@ -25,19 +25,6 @@ public partial class AccountTypeChange
 
     public AccountType AccountType { get; set; }
     private Button saveBtn = default!;
-
-    protected override async Task OnParametersSetAsync()
-    {
-        await Task.Run(() => 
-        { 
-            if(AccountTypeVm.ActionType == ActionType.NotSet)
-            {
-                Log.Error("You must set the ActionType");
-                throw new Exception("You must set the ActionType");
-            }
-        });
-    }
-
     private async Task Save()
     {
         if (AccountTypeVm.ActionType == ActionType.NotSet)

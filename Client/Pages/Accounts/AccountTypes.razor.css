@@ -29,8 +29,3 @@
     max-width: 0;
     text-overflow: ellipsis;
 }
-
-.float-right {
-    float: right !important;
-}
-

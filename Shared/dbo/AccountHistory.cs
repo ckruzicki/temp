@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TanglewoodCandleCo.Shared.dbo;
 
-public partial class AccountTypeHistory
+public partial class AccountHistory
 {
     public int Id { get; set; }
 
@@ -11,9 +11,7 @@ public partial class AccountTypeHistory
 
     public char ActionType { get; set; }
 
-    public string Field { get; set; } = null!;
-
-    public string Value { get; set; } = null!;
+    public string Audits { get; set; } = null!;
 
     public DateTime? DatePrev { get; set; }
 
