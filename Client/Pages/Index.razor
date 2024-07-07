@@ -1,20 +1,14 @@
 ﻿@page "/"
 
-<PageTitle>Tanglewood Candle Co.</PageTitle>
+<PageTitle>Tanglewood stuff.</PageTitle>
 
 <div class="tw-page">
     <AuthorizeView>
         <NotAuthorized>
-            <h1>Future WASM Tanglewood Candles admin site</h1>
+            <h1>Future Site of something. test</h1>
         </NotAuthorized>
         <Authorized>
-            <dl>
-                @foreach (var claim in @context.User.Claims)
-                {
-                    <dt>@claim.Type</dt>
-                    <dd>@claim.Value</dd>
-                }
-            </dl>
+          hello
         </Authorized>
     </AuthorizeView>
 </div>

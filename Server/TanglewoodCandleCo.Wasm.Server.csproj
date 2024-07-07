@@ -9,18 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Duende.BFF" Version="2.2.0" />
-    <PackageReference Include="Duende.BFF.Yarp" Version="2.2.0" />
     <PackageReference Include="IdentityModel" Version="7.0.0" />
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.6" />
-	<PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
-	<PackageReference Include="Serilog.Sinks.Seq" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Client\TanglewoodCandleCo.Wasm.Client.csproj" />
-    <ProjectReference Include="..\Shared\TanglewoodCandleCo.Wasm.Shared.csproj" />
   </ItemGroup>
 
 
